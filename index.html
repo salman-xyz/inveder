@@ -1,0 +1,15 @@
+<script>
+    function logout() {
+        // Clear authentication state
+        localStorage.removeItem('userSession');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        // Redirect to landing page
+        window.location.href = 'landing.html';
+    }
+</script>
+
+<script src="user-database.js"></script>
+    <script src="user-status-checker.js"></script>
+</body>
+</html>

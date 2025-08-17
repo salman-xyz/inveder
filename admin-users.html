@@ -1,0 +1,222 @@
+@@ .. @@
+        // Load users from database
+        function loadUsers() {
+            const users = window.UserDB.getUsers();
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = createUserRow(user);
+                tbody.appendChild(row);
+            });
+        }
+
+        // Create user table row
+        function createUserRow(user) {
+            const row = document.createElement('tr');
+            const createdDate = new Date(user.createdAt).toLocaleDateString();
+            const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never';
+            
+            row.innerHTML = `
+                <td>${user.firstName} ${user.lastName}</td>
+                <td>${user.email}</td>
+                <td><span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span></td>
+                <td>${user.role}</td>
+                <td>${createdDate}</td>
+                <td>${lastLogin}</td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="editUser('${user.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ${user.status === 'pending' ? `
+                            <button class="btn btn-success" onclick="approveUser('${user.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        ` : ''}
+                        ${user.status !== 'blocked' ? `
+                            <button class="btn btn-warning" onclick="blockUser('${user.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                <i class="fas fa-ban"></i>
+                            </button>
+                        ` : `
+                            <button class="btn btn-success" onclick="unblockUser('${user.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                <i class="fas fa-user-check"></i>
+                            </button>
+                        `}
+                        ${user.role !== 'admin' ? `
+                            <button class="btn btn-danger" onclick="deleteUser('${user.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
+            return row;
+        }
+
+        // Update user statistics
+        function updateUserStats() {
+            const stats = window.UserDB.getUserStats();
+
+            document.getElementById('totalUsers').textContent = stats.total;
+            document.getElementById('pendingUsers').textContent = stats.pending;
+            document.getElementById('blockedUsers').textContent = stats.blocked;
+            document.getElementById('activeUsers').textContent = stats.active;
+        }
+
+        // Show add user modal
+        function showAddUserModal() {
+            document.getElementById('modalTitle').textContent = 'Add New User';
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('password').required = true;
+            document.getElementById('password').placeholder = 'Enter password';
+            showModal('userModal');
+        }
+
+        // Edit user
+        function editUser(userId) {
+            const user = window.UserDB.getUserById(userId);
+            if (!user) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit User';
+            document.getElementById('userId').value = user.id;
+            document.getElementById('username').value = user.firstName + ' ' + user.lastName;
+            document.getElementById('email').value = user.email;
+            document.getElementById('status').value = user.status;
+            document.getElementById('role').value = user.role;
+            document.getElementById('password').required = false;
+            document.getElementById('password').placeholder = 'Leave blank to keep current password';
+            showModal('userModal');
+        }
+
+        // Hide user modal
+        function hideUserModal() {
+            hideModal('userModal');
+        }
+
+        // Handle user form submission
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const fullName = formData.get('username').split(' ');
+            const firstName = fullName[0] || '';
+            const lastName = fullName.slice(1).join(' ') || '';
+            
+            const userData = {
+                firstName: firstName,
+                lastName: lastName,
+                email: formData.get('email'),
+                status: formData.get('status'),
+                role: formData.get('role')
+            };
+
+            // Validation
+            const errors = validateForm(userData, ['firstName', 'email', 'status', 'role']);
+            if (errors.length > 0) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const users = window.UserDB.getUsers();
+            const userId = formData.get('userId');
+
+            if (userId) {
+                // Update existing user
+                try {
+                    const user = window.UserDB.getUserById(userId);
+                    if (user) {
+                        const updatedUsers = users.map(u => {
+                            if (u.id === userId) {
+                                const updated = { ...u, ...userData };
+                                if (formData.get('password')) {
+                                    updated.password = formData.get('password');
+                                }
+                                return updated;
+                            }
+                            return u;
+                        });
+                        window.UserDB.saveUsers(updatedUsers);
+                    }
+                    showNotification('User updated successfully', 'success');
+                } catch (error) {
+                    showNotification(error.message, 'error');
+                    return;
+                }
+            } else {
+                // Add new user
+                try {
+                    const newUserData = {
+                        ...userData,
+                        password: formData.get('password')
+                    };
+                    window.UserDB.createUser(newUserData);
+                    showNotification('User added successfully', 'success');
+                } catch (error) {
+                    showNotification(error.message, 'error');
+                    return;
+                }
+            }
+
+            hideUserModal();
+            loadUsers();
+            updateUserStats();
+        });
+
+        // Approve user
+        function approveUser(userId) {
+            if (confirm('Are you sure you want to approve this user?')) {
+                try {
+                    const currentUser = JSON.parse(localStorage.getItem('userSession') || '{}');
+                    window.UserDB.updateUserStatus(userId, 'active', currentUser.userId);
+                    loadUsers();
+                    updateUserStats();
+                    showNotification('User approved successfully', 'success');
+                } catch (error) {
+                    showNotification(error.message, 'error');
+                }
+            }
+        }
+
+        // Block user
+        function blockUser(userId) {
+            if (confirm('Are you sure you want to block this user?')) {
+                try {
+                    const currentUser = JSON.parse(localStorage.getItem('userSession') || '{}');
+                    window.UserDB.updateUserStatus(userId, 'blocked', currentUser.userId);
+                    loadUsers();
+                    updateUserStats();
+                    showNotification('User blocked successfully', 'warning');
+                } catch (error) {
+                    showNotification(error.message, 'error');
+                }
+            }
+        }
+
+        // Unblock user
+        function unblockUser(userId) {
+            if (confirm('Are you sure you want to unblock this user?')) {
+                try {
+                    const currentUser = JSON.parse(localStorage.getItem('userSession') || '{}');
+                    window.UserDB.updateUserStatus(userId, 'active', currentUser.userId);
+                    loadUsers();
+                    updateUserStats();
+                    showNotification('User unblocked successfully', 'success');
+                } catch (error) {
+                    showNotification(error.message, 'error');
+                }
+            }
+        }
+
+        // Delete user
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                const users = window.UserDB.getUsers();
+                const filteredUsers = users.filter(u => u.id !== userId);
+                window.UserDB.saveUsers(filteredUsers);
+                loadUsers();
+                updateUserStats();
+                showNotification('User deleted successfully', 'success');
+            }
+        }

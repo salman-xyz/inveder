@@ -1,0 +1,15 @@
+@@ .. @@
+         function updateStats() {
+            // Get real user stats
+            const userStats = window.UserDB.getUserStats();
+            const cars = AdminDatabase.getCars();
+            const clothing = AdminDatabase.getClothing();
+            const items = AdminDatabase.getItems();
+            
+            const dbEntries = cars.length + clothing.length + items.length;
+
+            document.getElementById('totalUsers').textContent = userStats.total.toLocaleString();
+            document.getElementById('blockedUsers').textContent = userStats.blocked;
+            document.getElementById('pendingRequests').textContent = userStats.pending;
+            document.getElementById('dbEntries').textContent = dbEntries.toLocaleString();
+        }

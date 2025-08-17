@@ -1,0 +1,66 @@
+@@ .. @@
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            try {
+                // Try to authenticate with user database first
+                const user = window.UserDB.authenticateUser(username, password);
+                
+                if (user.role === 'admin') {
+                    // Set admin session
+                    const session = {
+                        authenticated: true,
+                        timestamp: Date.now(),
+                        user: user.id,
+                        email: user.email,
+                        role: user.role
+                    };
+                    localStorage.setItem('adminSession', JSON.stringify(session));
+                    
+                    // Also set user session
+                    const userSession = {
+                        isLoggedIn: true,
+                        userId: user.id,
+                        email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        role: user.role,
+                        loginTime: new Date().toISOString()
+                    };
+                    localStorage.setItem('userSession', JSON.stringify(userSession));
+                    
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    throw new Error('Access denied. Admin privileges required.');
+                }
+            } catch (error) {
+                // Show error message
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = error.message;
+                
+                // Shake animation
+                document.querySelector('.login-card').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.login-card').classList.remove('shake');
+                }, 600);
+                
+                // Clear fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+    
+    <script src="user-database.js"></script>
+</body>
+</html>
