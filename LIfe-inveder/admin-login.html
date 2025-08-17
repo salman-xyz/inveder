@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Life Inveder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-login-body">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="admin-logo">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Admin Panel</h2>
+                <p>Life Inveder Administration</p>
+            </div>
+            
+            <form id="adminLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" name="password" required>
+                        <span class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login to Admin Panel
+                </button>
+                
+                <div id="loginError" class="error-message" style="display: none;">
+                    Invalid credentials. Please try again.
+                </div>
+            </form>
+            
+            <div class="login-footer">
+                <a href="landing.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Website
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (username === 'admin' && password === 'Admin') {
+                // Set admin session using the same format as admin.js
+                const session = {
+                    authenticated: true,
+                    timestamp: Date.now(),
+                    user: 'admin'
+                };
+                localStorage.setItem('adminSession', JSON.stringify(session));
+                
+                // Redirect to admin dashboard
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                // Show error message
+                errorDiv.style.display = 'block';
+                
+                // Shake animation
+                document.querySelector('.login-card').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.login-card').classList.remove('shake');
+                }, 600);
+                
+                // Clear fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Check if already authenticated
+        function isAuthenticated() {
+            const adminSession = localStorage.getItem('adminSession');
+            if (!adminSession) return false;
+            
+            try {
+                const session = JSON.parse(adminSession);
+                const currentTime = Date.now();
+                
+                // Check if session is expired (24 hours)
+                if (currentTime - session.timestamp > 24 * 60 * 60 * 1000) {
+                    localStorage.removeItem('adminSession');
+                    return false;
+                }
+                
+                return session.authenticated === true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Auto-focus username field and check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            // If already authenticated, redirect to dashboard
+            if (isAuthenticated()) {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>

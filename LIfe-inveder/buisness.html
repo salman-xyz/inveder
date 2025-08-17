@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Business Marketplace Form</title>
+		<link
+			rel="stylesheet"
+			href="buisness.css?v=2.1" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="enhanced-nav.css" />
+	</head>
+	<body>
+		<!-- Enhanced Navigation Bar -->
+		<nav class="enhanced-nav">
+			<div class="nav-container">
+				<ul class="nav-menu">
+					<li class="nav-item">
+						<a href="index.html" class="nav-link">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+								<polyline points="9,22 9,12 15,12 15,22"/>
+							</svg>
+							<span class="nav-text">Main Menu</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="items.html" class="nav-link">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+								<rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+							</svg>
+							<span class="nav-text">Item Ads</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="clothin-html.html" class="nav-link">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+							</svg>
+							<span class="nav-text">Clothing</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="dating.html" class="nav-link">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+							</svg>
+							<span class="nav-text">Dating</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="buisness.html" class="nav-link active">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+							</svg>
+							<span class="nav-text">Business</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="work.html" class="nav-link">
+							<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+								<line x1="8" y1="21" x2="16" y2="21"/>
+								<line x1="12" y1="17" x2="12" y2="21"/>
+							</svg>
+							<span class="nav-text">Work</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<main class="container">
+			<div class="form-container">
+				<h2 class="form-title">Business Transaction Form</h2>
+
+				<form id="businessForm">
+					<!-- Transaction Type Toggle -->
+					<div class="form-group">
+						<div class="transaction-toggle">
+							<button
+								type="button"
+								class="toggle-btn active"
+								data-type="buy">
+								Buying
+							</button>
+							<button
+								type="button"
+								class="toggle-btn"
+								data-type="sell">
+								Selling
+							</button>
+						</div>
+					</div>
+
+					<!-- Checkboxes -->
+					<div class="form-group checkbox-group">
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								name="isPrivate"
+								id="isPrivate" />
+							<span>a private business</span>
+						</label>
+
+						<label class="checkbox-label">
+							<input
+								type="checkbox"
+								name="isFamily"
+								id="isFamily" />
+							<span>family business</span>
+						</label>
+					</div>
+
+					<!-- Business Type Search -->
+					<div class="form-group">
+						<label for="businessType"
+							>Business Name (Optional)</label
+						>
+						<div class="search-container">
+							<input
+								type="text"
+								id="businessType"
+								placeholder="Type to search business types..." />
+							<div
+								id="suggestions"
+								class="suggestions"></div>
+						</div>
+					</div>
+
+					<!-- Business Number -->
+					<div class="form-group">
+						<label for="businessNumber"
+							>Business Number (Optional)</label
+						>
+						<input
+							type="text"
+							id="businessNumber"
+							placeholder="e.g. 27" />
+					</div>
+
+					<!-- Location -->
+					<div class="form-group">
+						<label for="location">Location (Optional)</label>
+						<div class="search-container">
+							<input
+								type="text"
+								id="location"
+								placeholder="Type to search locations..." />
+							<div
+								id="locationSuggestions"
+								class="suggestions"></div>
+						</div>
+					</div>
+
+					<!-- Price/Budget -->
+					<div class="form-group">
+						<label
+							for="price"
+							id="priceLabel"
+							>Budget (Optional)</label
+						>
+						<div class="price-input">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="dollar-icon">
+								<line
+									x1="12"
+									y1="1"
+									x2="12"
+									y2="23"></line>
+								<path
+									d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+							</svg>
+							<input
+								type="text"
+								id="price"
+								placeholder="e.g. 60m, 70k, 7b" />
+						</div>
+					</div>
+
+					<!-- Buttons -->
+					<div class="button-group">
+						<button
+							type="submit"
+							class="submit-btn">
+							Submit
+						</button>
+						<button
+							type="button"
+							class="copy-btn"
+							disabled>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="copy-icon">
+								<rect
+									x="9"
+									y="9"
+									width="13"
+									height="13"
+									rx="2"
+									ry="2"></rect>
+								<path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+							</svg>
+							Copy
+						</button>
+					</div>
+				</form>
+
+				<!-- Output Display -->
+				<div class="output-container">
+					<h3>Generated Output:</h3>
+					<div
+						id="output"
+						class="output">
+						<span class="placeholder"
+							>Output will appear here after submission</span
+						>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<script src="buisness.js?v=5.2"></script>
+	</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Life Invader</title>
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Admin Panel</h3>
+                <p>Life Invader Management</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="admin-dashboard.html" class="nav-link active">
+                        <i class="nav-icon fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="admin-users.html" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <span>User Management</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="admin-cars.html" class="nav-link">
+                        <i class="nav-icon fas fa-car"></i>
+                        <span>Car Database</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="admin-clothing.html" class="nav-link">
+                        <i class="nav-icon fas fa-tshirt"></i>
+                        <span>Clothing Database</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="admin-items.html" class="nav-link">
+                        <i class="nav-icon fas fa-box"></i>
+                        <span>Items Database</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="admin-title">
+                    <h1>Dashboard Overview</h1>
+                    <p>Monitor your Life Invader platform performance and statistics</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn btn-primary" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <button class="btn btn-outline" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="totalUsers">1,247</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +12% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blocked">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="stat-number" id="blockedUsers">23</div>
+                    <div class="stat-label">Blocked Users</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down"></i> -2 this week
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" id="pendingRequests">45</div>
+                    <div class="stat-label">Pending Requests</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +8 today
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon database">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-number" id="dbEntries">5,892</div>
+                    <div class="stat-label">Database Entries</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +156 this week
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity and Quick Actions -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <!-- Recent Activity -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Recent Activity</h3>
+                        <button class="btn btn-outline" onclick="viewAllActivity()">
+                            <i class="fas fa-eye"></i>
+                            View All
+                        </button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Action</th>
+                                <th>User</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivity">
+                            <tr>
+                                <td>2 min ago</td>
+                                <td>New car added to database</td>
+                                <td>Admin</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>15 min ago</td>
+                                <td>User registration</td>
+                                <td>john_doe</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>32 min ago</td>
+                                <td>Clothing item updated</td>
+                                <td>Admin</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>1 hour ago</td>
+                                <td>User blocked</td>
+                                <td>spam_user</td>
+                                <td><span class="status-badge status-blocked">Blocked</span></td>
+                            </tr>
+                            <tr>
+                                <td>2 hours ago</td>
+                                <td>Database backup</td>
+                                <td>System</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="form-section">
+                    <h3>Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="addNewUser()">
+                            <i class="fas fa-user-plus"></i>
+                            Add New User
+                        </button>
+                        <button class="btn btn-success" onclick="addNewCar()">
+                            <i class="fas fa-car"></i>
+                            Add New Car
+                        </button>
+                        <button class="btn btn-warning" onclick="addNewClothing()">
+                            <i class="fas fa-tshirt"></i>
+                            Add New Clothing
+                        </button>
+                        <button class="btn btn-secondary" onclick="addNewItem()">
+                            <i class="fas fa-box"></i>
+                            Add New Item
+                        </button>
+                        <hr style="border: 1px solid var(--admin-border); margin: 1rem 0;">
+                        <button class="btn btn-outline" onclick="backupDatabase()">
+                            <i class="fas fa-shield-alt"></i>
+                            Backup Database
+                        </button>
+                        <button class="btn btn-danger" onclick="clearCache()">
+                            <i class="fas fa-trash"></i>
+                            Clear Cache
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>System Status</h3>
+                    <span class="status-badge status-active">All Systems Operational</span>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Uptime</th>
+                            <th>Last Checked</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <i class="fas fa-database"></i> Database Server
+                            </td>
+                            <td><span class="status-badge status-active">Online</span></td>
+                            <td>99.98%</td>
+                            <td>Just now</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fas fa-server"></i> Web Server
+                            </td>
+                            <td><span class="status-badge status-active">Online</span></td>
+                            <td>99.95%</td>
+                            <td>30 sec ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fas fa-shield-alt"></i> Security System
+                            </td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>100%</td>
+                            <td>1 min ago</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fas fa-backup"></i> Backup Service
+                            </td>
+                            <td><span class="status-badge status-active">Running</span></td>
+                            <td>99.99%</td>
+                            <td>5 min ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification"></div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            updateStats();
+            setInterval(updateStats, 30000); // Update every 30 seconds
+        });
+
+        // Dashboard functions
+        function initializeDashboard() {
+            // Check authentication
+            if (!isAuthenticated()) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Initialize components
+            updateLastActivity();
+            checkSystemStatus();
+        }
+
+        function updateStats() {
+            // Get real data counts
+            const users = AdminDatabase.getUsers();
+            const cars = AdminDatabase.getCars();
+            const clothing = AdminDatabase.getClothing();
+            const items = AdminDatabase.getItems();
+            
+            const totalUsers = users.length;
+            const blockedUsers = users.filter(user => user.status === 'blocked').length;
+            const pendingUsers = users.filter(user => user.status === 'pending').length;
+            const dbEntries = cars.length + clothing.length + items.length;
+
+            document.getElementById('totalUsers').textContent = totalUsers.toLocaleString();
+            document.getElementById('blockedUsers').textContent = blockedUsers;
+            document.getElementById('pendingRequests').textContent = pendingUsers;
+            document.getElementById('dbEntries').textContent = dbEntries.toLocaleString();
+        }
+
+        function updateLastActivity() {
+            // This would typically fetch from server
+            console.log('Activity updated');
+        }
+
+        function checkSystemStatus() {
+            // This would typically check actual system status
+            console.log('System status checked');
+        }
+
+        function refreshDashboard() {
+            showNotification('Dashboard refreshed successfully', 'success');
+            updateStats();
+            updateLastActivity();
+            checkSystemStatus();
+        }
+
+        function exportData() {
+            // Simulate data export
+            const btn = event.target.closest('.btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="spinner"></i> Exporting...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                showNotification('Data exported successfully', 'success');
+                
+                // Create and download a sample CSV
+                const csvContent = "data:text/csv;charset=utf-8,Type,Count,Status\nUsers,1247,Active\nBlocked Users,23,Blocked\nPending Requests,45,Pending\nDatabase Entries,5892,Active";
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "dashboard_data.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, 2000);
+        }
+
+        function viewAllActivity() {
+            showNotification('Redirecting to activity log...', 'success');
+            // This would redirect to a detailed activity page
+        }
+
+        // Quick Action Functions
+        function addNewUser() {
+            window.location.href = 'admin-users.html?action=add';
+        }
+
+        function addNewCar() {
+            window.location.href = 'admin-cars.html?action=add';
+        }
+
+        function addNewClothing() {
+            window.location.href = 'admin-clothing.html?action=add';
+        }
+
+        function addNewItem() {
+            window.location.href = 'admin-items.html?action=add';
+        }
+
+        function backupDatabase() {
+            if (confirm('Are you sure you want to create a database backup?')) {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="spinner"></i> Creating Backup...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    showNotification('Database backup created successfully', 'success');
+                }, 3000);
+            }
+        }
+
+        function clearCache() {
+            if (confirm('Are you sure you want to clear the cache? This may temporarily slow down the site.')) {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="spinner"></i> Clearing Cache...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    showNotification('Cache cleared successfully', 'success');
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

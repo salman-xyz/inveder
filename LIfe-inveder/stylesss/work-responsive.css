@@ -1,0 +1,30 @@
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem auto;
+  }
+
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin: 0.5rem auto;
+  }
+
+  .form-container {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  input,
+  .primary-button,
+  .secondary-button {
+    padding: 0.6rem;
+  }
+}
